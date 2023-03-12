@@ -15,7 +15,23 @@ authe = firebase.auth()
 database = firebase.database()
 
 def Dashboard(request):
-    sensor = database.child('Realtime').child('0').get().val()
+    sensor = database.child('Realtime').get().val()
     sensor1 = database.child('Realtime').child('1').get().val()
-    print(sensor)
-    return render(request, 'app/dashboard.html')
+    nox = []
+    cox = []
+    benzene = []
+    solar = []
+    time = []
+    for i in sensor:
+        benzene.append(i['Benzene'])
+        cox.append(i['COx'])
+        nox.append(i['NOx'])
+        solar.append(i['Solar Voltage'])
+        time.append(i['Timestamp'])
+    return render(request, 'app/dashboard.html',{
+    'nox':nox,
+    'cox':cox,
+    'benzene':benzene,
+    'solar':solar,
+    'time':time,
+})

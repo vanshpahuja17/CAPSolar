@@ -22,7 +22,7 @@ Coded by www.creative-tim.com
   <link rel="icon" type="image/png" href="../static/assets/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Paper Dashboard 2 by Creative Tim
+    CAPSolar
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -117,7 +117,7 @@ Coded by www.creative-tim.com
                 <span class="navbar-toggler-bar bar3"></span>
               </button>
             </div>
-            <a class="navbar-brand" href="javascript:;">Paper Dashboard 2</a>
+            <a class="navbar-brand" href="javascript:;">CAPSolar</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -183,8 +183,8 @@ Coded by www.creative-tim.com
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Capacity</p>
-                      <p class="card-title">150GB<p>
+                      <p class="card-category">COx</p>
+                      <p class="card-title">0.56 ppm<p>
                     </div>
                   </div>
                 </div>
@@ -209,8 +209,8 @@ Coded by www.creative-tim.com
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Revenue</p>
-                      <p class="card-title">$ 1,345<p>
+                      <p class="card-category">NOx</p>
+                      <p class="card-title">49 ppm<p>
                     </div>
                   </div>
                 </div>
@@ -235,8 +235,8 @@ Coded by www.creative-tim.com
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Errors</p>
-                      <p class="card-title">23<p>
+                      <p class="card-category">Benzene</p>
+                      <p class="card-title">87 ppm<p>
                     </div>
                   </div>
                 </div>
@@ -261,8 +261,8 @@ Coded by www.creative-tim.com
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Followers</p>
-                      <p class="card-title">+45K<p>
+                      <p class="card-category">Solar Volatge</p>
+                      <p class="card-title">5 V<p>
                     </div>
                   </div>
                 </div>
@@ -281,11 +281,49 @@ Coded by www.creative-tim.com
           <div class="col-md-12">
             <div class="card ">
               <div class="card-header ">
-                <h5 class="card-title">Users Behavior</h5>
+                <h5 class="card-title">COx Behavior On Solar Power</h5>
                 <p class="card-category">24 Hours performance</p>
               </div>
               <div class="card-body ">
-                <canvas id=chartHours width="400" height="100"></canvas>
+                <canvas id="chartHours" width="400" height="100"></canvas>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">NOx Behavior On Solar Power</h5>
+                <p class="card-category">24 Hours performance</p>
+              </div>
+              <div class="card-body ">
+                <canvas id="nox" width="400" height="100"></canvas>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Benzene Behavior On Solar Power</h5>
+                <p class="card-category">24 Hours performance</p>
+              </div>
+              <div class="card-body ">
+                <canvas id="benzene" width="400" height="100"></canvas>
               </div>
               <div class="card-footer ">
                 <hr>
@@ -379,12 +417,91 @@ Coded by www.creative-tim.com
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../static/assets/js/paper-dashboard.min.js?v=2.0.1" type="text/javascript"></script><!-- Paper Dashboard DEMO methods, don't include it in your project! -->
   <script src="../static/assets/demo/demo.js"></script>
-  <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
-      demo.initChartsPages();
+
+<script>
+    var ctx = document.getElementById('chartHours').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:{{time|safe}},
+            datasets: [{
+                label: 'My Data',
+                data: {{cox|safe}} ,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x1:{
+                  type:'linear',
+                  display:true,
+                  position: 'top',
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
     });
-  </script>
+</script>
+<script>
+  var ctx = document.getElementById('nox').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels:{{time|safe}},
+          datasets: [{
+              label: 'My Data',
+              data: {{nox|safe}} ,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              x1:{
+                type:'linear',
+                display:true,
+                position: 'top',
+              },
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById('benzene').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels:{{time|safe}},
+          datasets: [{
+              label: 'My Data',
+              data: {{benzene|safe}} ,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              x1:{
+                type:'linear',
+                display:true,
+                position: 'top',
+              },
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
 </body>
 
 </html>
