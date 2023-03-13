@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path("register/", Register, name="register"),
-    path("login/", Login, name="login"),
+    path("", Login, name="login"),
     path("logout/", Logout, name="logout"),
 
     path("otp-verification/", VerifyOTPPage, name="verifyotppage"),
@@ -16,6 +16,6 @@ urlpatterns = [
     path("fp-otp/", FpOTP, name="fp-otp"),
     path("fp-password/", FpPassword, name="fp-password"),
 
-    path("", Dashboard, name="dashboard"),
+    path("dashboard/", Dashboard, name="dashboard"),
     path("notifications/", notifications, name="notifications")
 ]
