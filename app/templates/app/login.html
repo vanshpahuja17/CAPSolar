@@ -171,7 +171,7 @@
                                     <img src="{% static 'assets/images/icon/logo.png' %}" alt="" height="28"> <span class="logo-txt"></span>
                                 </a>
                             </div> 
-                            {% if messages %}
+                            {% comment %} {% if messages %}
                                 {% for message in messages %}
                                     {% if message.tags == 'success' %}
                                         <div class="alert alert-success mb-4" role="alert">
@@ -183,12 +183,12 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             <div class="auth-content my-auto">
                                 <div>
                                     <div class="text-center">
                                         <h5 class="mb-0">Sign In</h5>
-                                        <p class="text-muted mt-2">Log in to continue to CareerLink.</p>
+                                        <p class="text-muted mt-2">Log in to continue to CAPSolar.</p>
                                     </div>
                                     <form method="POST" class="mt-4 pt-2" action="{% url 'login' %}" class="needs-validation" novalidate="">
                                         {% csrf_token %}
@@ -206,14 +206,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 text-right">
-                                                {% comment %} <a href="{% url 'fpemailpage' %}">Forgot Password?</a> {% endcomment %}
+                                                <a href="{% url 'fpemailpage' %}">Forgot Password?</a>
                                             </div>
                                         </div>
                                         <div class="submit-btn-area">
                                             <button id="form_submit" type="submit">Submit <i class="ti-arrow-right"></i></button>
                                         </div>
                                         <div class="form-footer text-center mt-5">
-                                            {% comment %} <p class="text-muted">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p> {% endcomment %}
+                                            <p class="text-muted">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
                                         </div>
                                     </form>
                                 </div>
@@ -221,7 +221,7 @@
     
                             <div class="mt-4 mt-md-5 text-center">
                                 <p class="mb-0">©
-                                    <script>document.write(new Date().getFullYear())</script> Django Dynamos
+                                    <script>document.write(new Date().getFullYear())</script> CAPSolar
                                 </p>
                             </div>
                         </div>

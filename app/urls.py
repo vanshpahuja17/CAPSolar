@@ -11,6 +11,8 @@ urlpatterns = [
     path("forgot-password-otp/", FpOTPPage, name="fpotppage"),
     path("forgot-password-reset/", FpPasswordPage, name="fppasswordpage"),
 
+    path("threshold_sample/", Threshold , name="threshold_sample"),
+
     path("verify-otp/", VerifyOTP, name="verify-otp"),
     path("fp-email/", FpEmail, name="fp-email"),
     path("fp-otp/", FpOTP, name="fp-otp"),

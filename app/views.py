@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
 import random
+from django.core.exceptions import MultipleObjectsReturned
 from django.http import JsonResponse
 from django.http import QueryDict
 import pyrebase
@@ -51,6 +52,7 @@ def Dashboard(request):
     benzene_morning = []
     time_morning = []
     solar_morning = []
+    benzenes = 0
     for i in sensor:
         benzene.append(i['Benzene'])
         cox.append(i['COx'])
@@ -75,6 +77,23 @@ def Dashboard(request):
         nox_morning.append(i['NOx'])
         solar_morning.append(i['Solar Voltage'])
         time_morning.append(i['ï»¿Timestamp'])
+    # if request.method == "POST":
+        # name = request.POST.get('lname')
+        # lname = request.POST.get('lname')
+    email = request.session['email']
+    
+        # contact = request.POST.get('contact')
+    if(benzenes>=49):
+        print(email)
+        messages.error(request, "This value of Benzene will decrease the value of solar power.")
+
+        send_mail(
+        'Alert',
+            'Dear User' +', The concentation of benzene has increased in the atmosphere, hence you may see a drop in solar power. '+'Please Click http://127.0.0.1:8000/threshold_sample/ to know more',
+            '2020.vansh.pahuja@ves.ac.in',
+            [email],
+            fail_silently=False,
+        )
     return render(request, 'app/dashboard.html',{
     'sensor':sensor,
     'nox':nox,
@@ -107,7 +126,19 @@ def Dashboard(request):
 })
 
 def notifications(request):
-    return redirect(request , "app/notifications.html")
+    if Notification.objects.filter(email= request.session['email']).exists():
+        try:
+            data = []
+            data = Notification.objects.get(email= request.session['email'])
+        except MultipleObjectsReturned:
+            data=Notification.objects.filter(email= request.session['email']).first()
+    
+    else:
+        return redirect('dashboard')
+        messages.success("Please schedule an appointment first")
+    return render(request, 'app/notifications.html',{'data':data})
+
+    return render(request , "app/notifications.html")
 
 def send_otp_email(otp, email):
     subject = "Verify your Email - {}".format(email)
@@ -127,6 +158,7 @@ def send_psw_email(otp, email):
 
 def Register(request):
     if request.method == "POST":
+        
         fnd1 = User.objects.filter(email = request.POST['email'].lower())
         # fnd2 = Company.objects.filter(email = request.POST['email'].lower())
         if len(fnd1) == 0:
@@ -195,8 +227,8 @@ def Login(request):
     
 def Logout(request):
     if 'email' in request.session:
-        if request.session['role'] == 'applicant':
-            del request.session['totalPoints']
+        # if request.session['role'] == 'applicant':
+        #     del request.session['totalPoints']
         del request.session['id']
         del request.session['name']
         del request.session['email']
@@ -308,3 +340,18 @@ def FpPassword(request):
         else:
             messages.error(request, "Password and Confirm Password do not match. Please try again")
             return redirect("fppasswordpage")
+        
+def Threshold(request):
+    if Notification.objects.filter(email= request.session['email']).exists():
+        try:
+            data = []
+            data = Notification.objects.get(email= request.session['email'])
+        except MultipleObjectsReturned:
+            data=Notification.objects.filter(email= request.session['email']).first()
+    
+    else:
+        return redirect('dashboard')
+        messages.success("Please schedule an appointment first")
+    return render(request, 'app/threshold_sample.html',{'data':data})
+
+    return render(request , "app/notifications.html")

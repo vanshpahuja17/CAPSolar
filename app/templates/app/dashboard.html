@@ -36,6 +36,7 @@ Coded by www.creative-tim.com
 </head>
 
 <body class="">
+  
   <div class="wrapper ">
     <div class="sidebar" data-color="white" data-active-color="danger">
       <div class="logo">
@@ -46,7 +47,7 @@ Coded by www.creative-tim.com
           <!-- <p>CT</p> -->
         </a>
         <a class="simple-text logo-normal">
-          CAPSolar
+          {{ request.session.email }}
           <!-- <div class="logo-image-big">
             <img src="../static/assets/img/logo-big.png">
           </div> -->
@@ -55,13 +56,13 @@ Coded by www.creative-tim.com
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="active ">
-            <a href="./dashboard.html">
+            <a href="{% url 'dashboard' %}">
               <i class="nc-icon nc-bank"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li>
-            <a href="./notifications.html">
+            <a href="{% url 'notifications' %}">
               <i class="nc-icon nc-bell-55"></i>
               <p>Notifications</p>
             </a>
@@ -112,15 +113,15 @@ Coded by www.creative-tim.com
               </div>
             </form>
             <ul class="navbar-nav">
-              <li class="nav-item">
+              {% comment %} <li class="nav-item">
                 <a class="nav-link btn-magnify" href="javascript:;">
                   <i class="nc-icon nc-layout-11"></i>
                   <p>
                     <span class="d-lg-none d-md-block">Stats</span>
                   </p>
                 </a>
-              </li>
-              <li class="nav-item btn-rotate dropdown">
+              </li> {% endcomment %}
+              {% comment %} <li class="nav-item btn-rotate dropdown">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="nc-icon nc-bell-55"></i>
                   <p>
@@ -132,12 +133,15 @@ Coded by www.creative-tim.com
                   <a class="dropdown-item" href="#">Another action</a>
                   <a class="dropdown-item" href="#">Something else here</a>
                 </div>
-              </li>
+              </li> {% endcomment %}
               <li class="nav-item">
                 <a class="nav-link btn-rotate" href="javascript:;">
-                  <i class="nc-icon nc-settings-gear-65"></i>
+                  {% comment %} <i class="nc-icon nc-settings-gear-65"></i> {% endcomment %}
+                  <a class="dropdown-item d-flex align-items-center justify-content-between"
+                        href="{% url 'logout' %}">
+                        <span>Log Out</span></a>
                   <p>
-                    <span class="d-lg-none d-md-block">Account</span>
+                    {% comment %} <span class="d-lg-none d-md-block">Account</span> {% endcomment %}
                   </p>
                 </a>
               </li>
@@ -146,113 +150,88 @@ Coded by www.creative-tim.com
         </div>
       </nav>
       <!-- End Navbar -->
+      
       <div class="content">
+        {% include 'app/header-new.html' %}
         <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-globe text-warning"></i>
-                    </div>
-                  </div>
+                  
+                  
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">COx</p>
-                      <p class="card-title">0.56 ppm<p>
+                      <p class="card-category"><iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2063534/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=CO+vs+Time&type=line"></iframe></p>
+                      {% comment %} <p class="card-title">0.56 ppm<p> {% endcomment %}
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i>
-                  Update Now
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-money-coins text-success"></i>
-                    </div>
-                  </div>
+                  
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">NOx</p>
-                      <p class="card-title">49 ppm<p>
+                      <p class="card-category"><iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2063534/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=NO+vs+Time&type=line"></iframe>
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i>
-                  Last day
-                </div>
-              </div>
+          
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
-                    </div>
-                  </div>
+                  
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Benzene</p>
-                      <p class="card-title">87 ppm<p>
+                      <p class="card-category"><iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2063534/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Benzene+vs+Time&type=line"></iframe></p>
+                    
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-clock-o"></i>
-                  In the last hour
-                </div>
-              </div>
+             
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
-                    </div>
-                  </div>
+                  
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Solar Volatge</p>
-                      <p class="card-title">5 V<p>
+                      <p class="card-category"><iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2063534/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Solar+Voltage+vs+Time&type=line"></iframe></p>
+                      
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i>
-                  Update now
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="alert alert-success mb-4" role="alert">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger mb-4" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="row">
           <div class="col-md-12">
             <div class="card ">
