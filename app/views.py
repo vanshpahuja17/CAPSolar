@@ -31,12 +31,29 @@ def Dashboard(request):
     benzene = []
     solar = []
     time = []
+    benzenes = 0
     for i in sensor:
         benzene.append(i['Benzene'])
         cox.append(i['COx'])
         nox.append(i['NOx'])
         solar.append(i['Solar Voltage'])
         time.append(i['Timestamp'])
+    # if request.method == "POST":
+        # name = request.POST.get('lname')
+        # lname = request.POST.get('lname')
+    email = request.session['email']
+    
+        # contact = request.POST.get('contact')
+    if(benzenes>=49):
+        print(email)
+        messages.error(request, "This value of Benzene will decrease the value of solar power")
+        send_mail(
+        'Alert',
+            'Dear User' +', The concentation of benzene has increased in the atmosphere, hence you may see a drop in solar power ',
+            '2020.vansh.pahuja@ves.ac.in',
+            [email],
+            fail_silently=False,
+        )
     return render(request, 'app/dashboard.html',{
     'nox':nox,
     'cox':cox,
@@ -46,7 +63,7 @@ def Dashboard(request):
 })
 
 def notifications(request):
-    return redirect(request , "app/notifications.html")
+    return render(request , "app/notifications.html")
 
 def send_otp_email(otp, email):
     subject = "Verify your Email - {}".format(email)
@@ -66,6 +83,7 @@ def send_psw_email(otp, email):
 
 def Register(request):
     if request.method == "POST":
+        
         fnd1 = User.objects.filter(email = request.POST['email'].lower())
         # fnd2 = Company.objects.filter(email = request.POST['email'].lower())
         if len(fnd1) == 0:
@@ -134,8 +152,8 @@ def Login(request):
     
 def Logout(request):
     if 'email' in request.session:
-        if request.session['role'] == 'applicant':
-            del request.session['totalPoints']
+        # if request.session['role'] == 'applicant':
+        #     del request.session['totalPoints']
         del request.session['id']
         del request.session['name']
         del request.session['email']
