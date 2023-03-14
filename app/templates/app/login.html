@@ -171,7 +171,7 @@
                                     <img src="{% static 'assets/images/icon/logo.png' %}" alt="" height="28"> <span class="logo-txt"></span>
                                 </a>
                             </div> 
-                            {% if messages %}
+                            {% comment %} {% if messages %}
                                 {% for message in messages %}
                                     {% if message.tags == 'success' %}
                                         <div class="alert alert-success mb-4" role="alert">
@@ -183,7 +183,7 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             <div class="auth-content my-auto">
                                 <div>
                                     <div class="text-center">

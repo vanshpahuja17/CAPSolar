@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
 import random
+from django.core.exceptions import MultipleObjectsReturned
 from django.http import JsonResponse
 from django.http import QueryDict
 import pyrebase
@@ -46,10 +47,11 @@ def Dashboard(request):
         # contact = request.POST.get('contact')
     if(benzenes>=49):
         print(email)
-        messages.error(request, "This value of Benzene will decrease the value of solar power")
+        messages.error(request, "This value of Benzene will decrease the value of solar power.")
+
         send_mail(
         'Alert',
-            'Dear User' +', The concentation of benzene has increased in the atmosphere, hence you may see a drop in solar power ',
+            'Dear User' +', The concentation of benzene has increased in the atmosphere, hence you may see a drop in solar power. '+'Please Click http://127.0.0.1:8000/threshold_sample/ to know more',
             '2020.vansh.pahuja@ves.ac.in',
             [email],
             fail_silently=False,
@@ -63,6 +65,18 @@ def Dashboard(request):
 })
 
 def notifications(request):
+    if Notification.objects.filter(email= request.session['email']).exists():
+        try:
+            data = []
+            data = Notification.objects.get(email= request.session['email'])
+        except MultipleObjectsReturned:
+            data=Notification.objects.filter(email= request.session['email']).first()
+    
+    else:
+        return redirect('dashboard')
+        messages.success("Please schedule an appointment first")
+    return render(request, 'app/notifications.html',{'data':data})
+
     return render(request , "app/notifications.html")
 
 def send_otp_email(otp, email):
@@ -265,3 +279,18 @@ def FpPassword(request):
         else:
             messages.error(request, "Password and Confirm Password do not match. Please try again")
             return redirect("fppasswordpage")
+        
+def Threshold(request):
+    if Notification.objects.filter(email= request.session['email']).exists():
+        try:
+            data = []
+            data = Notification.objects.get(email= request.session['email'])
+        except MultipleObjectsReturned:
+            data=Notification.objects.filter(email= request.session['email']).first()
+    
+    else:
+        return redirect('dashboard')
+        messages.success("Please schedule an appointment first")
+    return render(request, 'app/threshold_sample.html',{'data':data})
+
+    return render(request , "app/notifications.html")
