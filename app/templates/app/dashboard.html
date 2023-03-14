@@ -352,7 +352,7 @@ Coded by www.creative-tim.com
     var id = document.getElementById("filterSelect").selectedOptions[0].value;
     if(id == "all" ){
       var ctx = document.getElementById('chartHours').getContext('2d');
-      myChart = new Chart(ctx, {
+      COChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time|safe}},
@@ -441,7 +441,7 @@ Coded by www.creative-tim.com
 
 
       var ctx = document.getElementById('nox').getContext('2d');
-      myChart = new Chart(ctx, {
+      NOChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{time|safe}},
@@ -524,7 +524,7 @@ Coded by www.creative-tim.com
   
 
     var ctx = document.getElementById('benzene').getContext('2d');
-    myChart = new Chart(ctx, {
+    BChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{time|safe}},
@@ -608,9 +608,11 @@ Coded by www.creative-tim.com
     function getVal(){
       var filter = document.getElementById("filterSelect").selectedOptions[0].value;
       if(filter == "all" ){
-        myChart.destroy();
+        COChart.destroy();
+        NOChart.destroy();
+        BChart.destroy();
         var ctx = document.getElementById('chartHours').getContext('2d');
-        myChart = new Chart(ctx, {
+        COChart = new Chart(ctx, {
             type: 'line',
             data: {
               labels: {{time|safe}},
@@ -699,7 +701,7 @@ Coded by www.creative-tim.com
   
 
         var ctx = document.getElementById('nox').getContext('2d');
-        myChart = new Chart(ctx, {
+        NOChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time|safe}},
@@ -782,7 +784,7 @@ Coded by www.creative-tim.com
     
   
       var ctx = document.getElementById('benzene').getContext('2d');
-      myChart = new Chart(ctx, {
+      BChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time|safe}},
@@ -864,9 +866,11 @@ Coded by www.creative-tim.com
     }
     
     else if(filter == "evening" ){
-      myChart.destroy();
+      COChart.destroy();
+      NOChart.destroy();
+      BChart.destroy();
       var ctx = document.getElementById('chartHours').getContext('2d');
-        myChart = new Chart(ctx, {
+        COChart = new Chart(ctx, {
             type: 'line',
             data: {
               labels: {{time_evening|safe}},
@@ -954,7 +958,7 @@ Coded by www.creative-tim.com
       
   
         var ctx = document.getElementById('nox').getContext('2d');
-        myChart = new Chart(ctx, {
+        NOChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time_evening|safe}},
@@ -1036,7 +1040,7 @@ Coded by www.creative-tim.com
       });
     
       var ctx = document.getElementById('benzene').getContext('2d');
-        myChart = new Chart(ctx, {
+        BChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time_evening|safe}},
@@ -1117,9 +1121,11 @@ Coded by www.creative-tim.com
       });
     }
      else if(filter == "afternoon"){
-      myChart.destroy();
+      COChart.destroy();
+      NOChart.destroy();
+      BChart.destroy();
       var ctx = document.getElementById('chartHours').getContext('2d');
-        myChart = new Chart(ctx, {
+        COChart = new Chart(ctx, {
             type: 'line',
             data: {
               labels: {{time_afternoon|safe}},
@@ -1208,7 +1214,7 @@ Coded by www.creative-tim.com
   
 
         var ctx = document.getElementById('nox').getContext('2d');
-        myChart = new Chart(ctx, {
+        NOChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time_afternoon|safe}},
@@ -1291,7 +1297,7 @@ Coded by www.creative-tim.com
     
   
       var ctx = document.getElementById('benzene').getContext('2d');
-        myChart = new Chart(ctx, {
+        BChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time_afternoon|safe}},
@@ -1372,9 +1378,11 @@ Coded by www.creative-tim.com
       });
      }
      else if(filter == "morning" ){
-      myChart.destroy();
+      COChart.destroy();
+      NOChart.destroy();
+      BChart.destroy();
       var ctx = document.getElementById('chartHours').getContext('2d');
-      myChart = new Chart(ctx, {
+      COChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: {{time_morning|safe}},
@@ -1463,7 +1471,7 @@ Coded by www.creative-tim.com
 
 
       var ctx = document.getElementById('nox').getContext('2d');
-      myChart = new Chart(ctx, {
+      NOChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{time_morning|safe}},
@@ -1546,7 +1554,7 @@ Coded by www.creative-tim.com
   
 
     var ctx = document.getElementById('benzene').getContext('2d');
-    myChart = new Chart(ctx, {
+    BChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{time_morning|safe}},
