@@ -25,24 +25,85 @@ database = firebase.database()
 
 def Dashboard(request):
     sensor = database.child('Realtime').get().val()
-    sensor1 = database.child('Realtime').child('1').get().val()
+    sensor1 = database.child('Evening').get().val()
+    sensor2 = database.child('Afternoon').get().val()
+    sensor3 = database.child('Morning').get().val()
     nox = []
     cox = []
     benzene = []
     solar = []
     time = []
+
+    nox_evening = []
+    cox_evening = []
+    benzene_evening = []
+    time_evening = []
+    solar_evening = []
+
+    nox_afternoon = []
+    cox_afternoon = []
+    benzene_afternoon = []
+    time_afternoon = []
+    solar_afternoon = []
+
+    nox_morning = []
+    cox_morning = []
+    benzene_morning = []
+    time_morning = []
+    solar_morning = []
     for i in sensor:
         benzene.append(i['Benzene'])
         cox.append(i['COx'])
         nox.append(i['NOx'])
         solar.append(i['Solar Voltage'])
         time.append(i['Timestamp'])
+    for i in sensor1:
+        benzene_evening.append(i['Benzene'])
+        cox_evening.append(i['COx'])
+        nox_evening.append(i['NOx'])
+        solar_evening.append(i['Solar Voltage'])
+        time_evening.append(i['ï»¿Timestamp'])
+    for i in sensor2:
+        benzene_afternoon.append(i['Benzene'])
+        cox_afternoon.append(i['COx'])
+        nox_afternoon.append(i['NOx'])
+        solar_afternoon.append(i['Solar Voltage'])
+        time_afternoon.append(i['ï»¿Timestamp'])
+    for i in sensor3:
+        benzene_morning.append(i['Benzene'])
+        cox_morning.append(i['COx'])
+        nox_morning.append(i['NOx'])
+        solar_morning.append(i['Solar Voltage'])
+        time_morning.append(i['ï»¿Timestamp'])
     return render(request, 'app/dashboard.html',{
+    'sensor':sensor,
     'nox':nox,
     'cox':cox,
     'benzene':benzene,
     'solar':solar,
     'time':time,
+
+    'sensor1':sensor1,
+    'cox_evening':cox_evening,
+    'nox_evening': nox_evening,
+    'benzene_evening': benzene_evening,
+    'solar_evening': solar_evening,
+    'time_evening': time_evening,
+
+    'sensor2':sensor2,
+    'cox_afternoon':cox_afternoon,
+    'nox_afternoon': nox_afternoon,
+    'benzene_afternoon': benzene_afternoon,
+    'solar_afternoon': solar_afternoon,
+    'time_afternoon': time_afternoon,   
+
+    
+    'sensor3':sensor3,
+    'cox_morning':cox_morning,
+    'nox_morning': nox_morning,
+    'benzene_morning': benzene_morning,
+    'solar_morning': solar_morning,
+    'time_morning': time_morning,   
 })
 
 def notifications(request):

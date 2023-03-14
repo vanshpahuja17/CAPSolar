@@ -70,6 +70,12 @@ Coded by www.creative-tim.com
             <a href="#">
               <i class="nc-icon nc-tile-56"></i>
               <p>Filters</p>
+              <select id="filterSelect" onchange="getVal()">
+                <option value="all" selected>All</option>
+                <option value="morning" onS>Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+              </select>
             </a>
           </li>
         </ul>
@@ -255,7 +261,7 @@ Coded by www.creative-tim.com
                 <p class="card-category">24 Hours performance</p>
               </div>
               <div class="card-body ">
-                <canvas id="chartHours" width="400" height="100"></canvas>
+                  <canvas id="chartHours" width="400" height="100"></canvas>
               </div>
               <div class="card-footer ">
                 <hr>
@@ -342,16 +348,107 @@ Coded by www.creative-tim.com
   <script src="../static/assets/js/paper-dashboard.min.js?v=2.0.1" type="text/javascript"></script><!-- Paper Dashboard DEMO methods, don't include it in your project! -->
   <script src="../static/assets/demo/demo.js"></script>
 
-<script>
-    var ctx = document.getElementById('chartHours').getContext('2d');
-    var myChart = new Chart(ctx, {
+  <script>
+    var id = document.getElementById("filterSelect").selectedOptions[0].value;
+    if(id == "all" ){
+      var ctx = document.getElementById('chartHours').getContext('2d');
+      myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time|safe}},
+            datasets: [{
+              label: 'COx',
+              yAxisID: 'y-axis-1',
+              data: {{cox|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+                label: 'Solar Voltage',
+                yAxisID: 'y-axis-2',
+                data: {{solar|safe}},
+                backgroundColor:'transparent',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }]
+          },
+          options: {
+            plugins: {
+              filter: {
+                filter: "all",
+              },
+            },
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'COx Concentration (ppm)'
+                },
+                
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+        });
+    
+
+
+      var ctx = document.getElementById('nox').getContext('2d');
+      myChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: {{time|safe}},
           datasets: [{
-            label: 'COx',
+            label: 'NOx',
             yAxisID: 'y-axis-1',
-            data: {{cox|safe}},
+            data: {{nox|safe}},
             backgroundColor:'transparent',
             borderColor: 'rgba(121, 156, 185, 1)',
             borderWidth: 1
@@ -378,11 +475,11 @@ Coded by www.creative-tim.com
               position: 'left',
               scaleLabel: {
                 display: true,
-                labelString: 'COx Concentration (ppm)'
+                labelString: 'NOx Concentration (ppmx)'
               },
               
               grid: {
-                drawOnChartArea: false, 
+                drawOmyChartArea: false, 
               },
             }, {
               id: 'y-axis-2',
@@ -424,171 +521,1123 @@ Coded by www.creative-tim.com
           }
         }
     });
-</script>
-<script>
-  var ctx = document.getElementById('nox').getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {{time|safe}},
-      datasets: [{
-        label: 'NOx',
-        yAxisID: 'y-axis-1',
-        data: {{nox|safe}},
-        backgroundColor:'transparent',
-        borderColor: 'rgba(121, 156, 185, 1)',
-        borderWidth: 1
-      }, {
-        label: 'Solar Voltage',
-        yAxisID: 'y-axis-2',
-        data: {{solar|safe}},
-        backgroundColor:'transparent',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Time (s)'
-          }
-        }],
-        yAxes: [{
-          id: 'y-axis-1',
-          type: 'linear',
-          position: 'left',
-          scaleLabel: {
-            display: true,
-            labelString: 'NOx Concentration (ppmx)'
+  
+
+    var ctx = document.getElementById('benzene').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{time|safe}},
+          datasets: [{
+            label: 'Benzene',
+            yAxisID: 'y-axis-1',
+            data: {{benzene|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(121, 156, 185, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Solar Voltage',
+            yAxisID: 'y-axis-2',
+            data: {{solar|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Time (s)'
+              }
+            }],
+            yAxes: [{
+              id: 'y-axis-1',
+              type: 'linear',
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: 'Benzene Concentration (ppm)'
+              },
+              grid: {
+                drawOmyChartArea: false, 
+              },
+            }, {
+              id: 'y-axis-2',
+              type: 'linear',
+              position: 'right',
+              scaleLabel: {
+                display: true,
+                labelString: 'Solar Voltage (V)'
+              },
+              gridLines: {
+                display: false
+              }
+
+            }]
           },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                var yLabel = tooltipItem.yLabel;
+                var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                if (label) {
+                  label += ': ';
+                }
           
-          grid: {
-            drawOnChartArea: false, 
-          },
-        }, {
-          id: 'y-axis-2',
-          type: 'linear',
-          position: 'right',
-          scaleLabel: {
-            display: true,
-            labelString: 'Solar Voltage (V)'
-          },
-          gridLines: {
-            display: false
-          }
-
-        }]
-      },
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-        callbacks: {
-          label: function(tooltipItem, data) {
-            var label = data.datasets[tooltipItem.datasetIndex].label || '';
-            var yLabel = tooltipItem.yLabel;
-            var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
-
-            if (label) {
-              label += ': ';
+                if(yAxisID === 'y-axis-1'){
+                  yLabel += ' ppm ';
+                }else if(yAxisID === 'y-axis-2'){
+                  yLabel += ' V ';
+                }
+                label += yLabel ;
+                {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                return label;
+              }
             }
-      
-            if(yAxisID === 'y-axis-1'){
-              yLabel += ' ppm ';
-            }else if(yAxisID === 'y-axis-2'){
-              yLabel += ' V ';
-            }
-            label += yLabel ;
-            {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
-            return label;
           }
         }
-      }
+    });
+
+  }
+    function getVal(){
+      var filter = document.getElementById("filterSelect").selectedOptions[0].value;
+      if(filter == "all" ){
+        myChart.destroy();
+        var ctx = document.getElementById('chartHours').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: {{time|safe}},
+              datasets: [{
+                label: 'COx',
+                yAxisID: 'y-axis-1',
+                data: {{cox|safe}},
+                backgroundColor:'transparent',
+                borderColor: 'rgba(121, 156, 185, 1)',
+                borderWidth: 1
+              }, {
+                  label: 'Solar Voltage',
+                  yAxisID: 'y-axis-2',
+                  data: {{solar|safe}},
+                  backgroundColor:'transparent',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }]
+            },
+            options: {
+              plugins: {
+                filter: {
+                  filter: "all",
+                },
+              },
+              scales: {
+                xAxes: [{
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Time (s)'
+                  }
+                }],
+                yAxes: [{
+                  id: 'y-axis-1',
+                  type: 'linear',
+                  position: 'left',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'COx Concentration (ppm)'
+                  },
+                  
+                  grid: {
+                    drawOmyChartArea: false, 
+                  },
+                }, {
+                  id: 'y-axis-2',
+                  type: 'linear',
+                  position: 'right',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Solar Voltage (V)'
+                  },
+                  gridLines: {
+                    display: false
+                  }
+
+                }]
+              },
+              tooltips: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    var yLabel = tooltipItem.yLabel;
+                    var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                    if (label) {
+                      label += ': ';
+                    }
+              
+                    if(yAxisID === 'y-axis-1'){
+                      yLabel += ' ppm ';
+                    }else if(yAxisID === 'y-axis-2'){
+                      yLabel += ' V ';
+                    }
+                    label += yLabel ;
+                    {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                    return label;
+                  }
+                }
+              }
+            }
+          });
+      
+  
+
+        var ctx = document.getElementById('nox').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time|safe}},
+            datasets: [{
+              label: 'NOx',
+              yAxisID: 'y-axis-1',
+              data: {{nox|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'NOx Concentration (ppmx)'
+                },
+                
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
+    
+  
+      var ctx = document.getElementById('benzene').getContext('2d');
+      myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time|safe}},
+            datasets: [{
+              label: 'Benzene',
+              yAxisID: 'y-axis-1',
+              data: {{benzene|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Benzene Concentration (ppm)'
+                },
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
     }
-});
+    
+    else if(filter == "evening" ){
+      myChart.destroy();
+      var ctx = document.getElementById('chartHours').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: {{time_evening|safe}},
+              datasets: [{
+                label: 'COx',
+                yAxisID: 'y-axis-1',
+                data: {{cox_evening|safe}},
+                backgroundColor:'transparent',
+                borderColor: 'rgba(121, 156, 185, 1)',
+                borderWidth: 1
+              }, {
+                  label: 'Solar Voltage',
+                  yAxisID: 'y-axis-2',
+                  data: {{solar_evening|safe}},
+                  backgroundColor:'transparent',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }]
+            },
+            options: {
+              plugins: {
+                filter: {
+                  filter: "all",
+                },
+              },
+              scales: {
+                xAxes: [{
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Time (s)'
+                  }
+                }],
+                yAxes: [{
+                  id: 'y-axis-1',
+                  type: 'linear',
+                  position: 'left',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'COx Concentration (ppm)'
+                  },
+                  
+                  grid: {
+                    drawOmyChartArea: false, 
+                  },
+                }, {
+                  id: 'y-axis-2',
+                  type: 'linear',
+                  position: 'right',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Solar Voltage (V)'
+                  },
+                  gridLines: {
+                    display: false
+                  }
+
+                }]
+              },
+              tooltips: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    var yLabel = tooltipItem.yLabel;
+                    var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                    if (label) {
+                      label += ': ';
+                    }
+              
+                    if(yAxisID === 'y-axis-1'){
+                      yLabel += ' ppm ';
+                    }else if(yAxisID === 'y-axis-2'){
+                      yLabel += ' V ';
+                    }
+                    label += yLabel ;
+                    {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                    return label;
+                  }
+                }
+              }
+            }
+          });
+      
+  
+        var ctx = document.getElementById('nox').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time_evening|safe}},
+            datasets: [{
+              label: 'NOx',
+              yAxisID: 'y-axis-1',
+              data: {{nox_evening|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar_evening|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'NOx Concentration (ppmx)'
+                },
+                
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
+    
+      var ctx = document.getElementById('benzene').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time_evening|safe}},
+            datasets: [{
+              label: 'Benzene',
+              yAxisID: 'y-axis-1',
+              data: {{benzene_evening|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar_evening|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Benzene Concentration (ppm)'
+                },
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
+    }
+     else if(filter == "afternoon"){
+      myChart.destroy();
+      var ctx = document.getElementById('chartHours').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: {{time_afternoon|safe}},
+              datasets: [{
+                label: 'COx',
+                yAxisID: 'y-axis-1',
+                data: {{cox_afternoon|safe}},
+                backgroundColor:'transparent',
+                borderColor: 'rgba(121, 156, 185, 1)',
+                borderWidth: 1
+              }, {
+                  label: 'Solar Voltage',
+                  yAxisID: 'y-axis-2',
+                  data: {{solar_afternoon|safe}},
+                  backgroundColor:'transparent',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }]
+            },
+            options: {
+              plugins: {
+                filter: {
+                  filter: "all",
+                },
+              },
+              scales: {
+                xAxes: [{
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Time (s)'
+                  }
+                }],
+                yAxes: [{
+                  id: 'y-axis-1',
+                  type: 'linear',
+                  position: 'left',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'COx Concentration (ppm)'
+                  },
+                  
+                  grid: {
+                    drawOmyChartArea: false, 
+                  },
+                }, {
+                  id: 'y-axis-2',
+                  type: 'linear',
+                  position: 'right',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Solar Voltage (V)'
+                  },
+                  gridLines: {
+                    display: false
+                  }
+
+                }]
+              },
+              tooltips: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    var yLabel = tooltipItem.yLabel;
+                    var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                    if (label) {
+                      label += ': ';
+                    }
+              
+                    if(yAxisID === 'y-axis-1'){
+                      yLabel += ' ppm ';
+                    }else if(yAxisID === 'y-axis-2'){
+                      yLabel += ' V ';
+                    }
+                    label += yLabel ;
+                    {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                    return label;
+                  }
+                }
+              }
+            }
+          });
+      
+  
+
+        var ctx = document.getElementById('nox').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time_afternoon|safe}},
+            datasets: [{
+              label: 'NOx',
+              yAxisID: 'y-axis-1',
+              data: {{nox_afternoon|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar_afternoon|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'NOx Concentration (ppmx)'
+                },
+                
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
+    
+  
+      var ctx = document.getElementById('benzene').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time_afternoon|safe}},
+            datasets: [{
+              label: 'Benzene',
+              yAxisID: 'y-axis-1',
+              data: {{benzene_afternoon|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+              label: 'Solar Voltage',
+              yAxisID: 'y-axis-2',
+              data: {{solar_afternoon|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Benzene Concentration (ppm)'
+                },
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+      });
+     }
+     else if(filter == "morning" ){
+      myChart.destroy();
+      var ctx = document.getElementById('chartHours').getContext('2d');
+      myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: {{time_morning|safe}},
+            datasets: [{
+              label: 'COx',
+              yAxisID: 'y-axis-1',
+              data: {{cox_morning|safe}},
+              backgroundColor:'transparent',
+              borderColor: 'rgba(121, 156, 185, 1)',
+              borderWidth: 1
+            }, {
+                label: 'Solar Voltage',
+                yAxisID: 'y-axis-2',
+                data: {{solar_morning|safe}},
+                backgroundColor:'transparent',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }]
+          },
+          options: {
+            plugins: {
+              filter: {
+                filter: "all",
+              },
+            },
+            scales: {
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time (s)'
+                }
+              }],
+              yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'COx Concentration (ppm)'
+                },
+                
+                grid: {
+                  drawOmyChartArea: false, 
+                },
+              }, {
+                id: 'y-axis-2',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Solar Voltage (V)'
+                },
+                gridLines: {
+                  display: false
+                }
+
+              }]
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                  var yLabel = tooltipItem.yLabel;
+                  var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                  if (label) {
+                    label += ': ';
+                  }
+            
+                  if(yAxisID === 'y-axis-1'){
+                    yLabel += ' ppm ';
+                  }else if(yAxisID === 'y-axis-2'){
+                    yLabel += ' V ';
+                  }
+                  label += yLabel ;
+                  {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                  return label;
+                }
+              }
+            }
+          }
+        });
+    
+
+
+      var ctx = document.getElementById('nox').getContext('2d');
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{time_morning|safe}},
+          datasets: [{
+            label: 'NOx',
+            yAxisID: 'y-axis-1',
+            data: {{nox_morning|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(121, 156, 185, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Solar Voltage',
+            yAxisID: 'y-axis-2',
+            data: {{solar_morning|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Time (s)'
+              }
+            }],
+            yAxes: [{
+              id: 'y-axis-1',
+              type: 'linear',
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: 'NOx Concentration (ppmx)'
+              },
+              
+              grid: {
+                drawOmyChartArea: false, 
+              },
+            }, {
+              id: 'y-axis-2',
+              type: 'linear',
+              position: 'right',
+              scaleLabel: {
+                display: true,
+                labelString: 'Solar Voltage (V)'
+              },
+              gridLines: {
+                display: false
+              }
+
+            }]
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                var yLabel = tooltipItem.yLabel;
+                var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                if (label) {
+                  label += ': ';
+                }
+          
+                if(yAxisID === 'y-axis-1'){
+                  yLabel += ' ppm ';
+                }else if(yAxisID === 'y-axis-2'){
+                  yLabel += ' V ';
+                }
+                label += yLabel ;
+                {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                return label;
+              }
+            }
+          }
+        }
+    });
+  
+
+    var ctx = document.getElementById('benzene').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{time_morning|safe}},
+          datasets: [{
+            label: 'Benzene',
+            yAxisID: 'y-axis-1',
+            data: {{benzene_morning|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(121, 156, 185, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Solar Voltage',
+            yAxisID: 'y-axis-2',
+            data: {{solar_morning|safe}},
+            backgroundColor:'transparent',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Time (s)'
+              }
+            }],
+            yAxes: [{
+              id: 'y-axis-1',
+              type: 'linear',
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: 'Benzene Concentration (ppm)'
+              },
+              grid: {
+                drawOmyChartArea: false, 
+              },
+            }, {
+              id: 'y-axis-2',
+              type: 'linear',
+              position: 'right',
+              scaleLabel: {
+                display: true,
+                labelString: 'Solar Voltage (V)'
+              },
+              gridLines: {
+                display: false
+              }
+
+            }]
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                var yLabel = tooltipItem.yLabel;
+                var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
+
+                if (label) {
+                  label += ': ';
+                }
+          
+                if(yAxisID === 'y-axis-1'){
+                  yLabel += ' ppm ';
+                }else if(yAxisID === 'y-axis-2'){
+                  yLabel += ' V ';
+                }
+                label += yLabel ;
+                {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
+                return label;
+              }
+            }
+          }
+        }
+    });
+  }
+  
+
+    }
+  
+    
+
 </script>
 <script>
-  var ctx = document.getElementById('benzene').getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {{time|safe}},
-      datasets: [{
-        label: 'Benzene',
-        yAxisID: 'y-axis-1',
-        data: {{benzene|safe}},
-        backgroundColor:'transparent',
-        borderColor: 'rgba(121, 156, 185, 1)',
-        borderWidth: 1
-      }, {
-        label: 'Solar Voltage',
-        yAxisID: 'y-axis-2',
-        data: {{solar|safe}},
-        backgroundColor:'transparent',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Time (s)'
-          }
-        }],
-        yAxes: [{
-          id: 'y-axis-1',
-          type: 'linear',
-          position: 'left',
-          scaleLabel: {
-            display: true,
-            labelString: 'Benzene Concentration (ppm)'
-          },
-          grid: {
-            drawOnChartArea: false, 
-          },
-        }, {
-          id: 'y-axis-2',
-          type: 'linear',
-          position: 'right',
-          scaleLabel: {
-            display: true,
-            labelString: 'Solar Voltage (V)'
-          },
-          gridLines: {
-            display: false
-          }
-
-        }]
-      },
-      tooltips: {
-        mode: 'index',
-        intersect: false,
-        callbacks: {
-          label: function(tooltipItem, data) {
-            var label = data.datasets[tooltipItem.datasetIndex].label || '';
-            var yLabel = tooltipItem.yLabel;
-            var yAxisID = data.datasets[tooltipItem.datasetIndex].yAxisID;
-
-            if (label) {
-              label += ': ';
-            }
-      
-            if(yAxisID === 'y-axis-1'){
-              yLabel += ' ppm ';
-            }else if(yAxisID === 'y-axis-2'){
-              yLabel += ' V ';
-            }
-            label += yLabel ;
-            {% comment %} + ' on ' + data.labels[tooltipItem.index] {% endcomment %}
-            return label;
-          }
-        }
-      }
-    }
-});
+  
+</script>
+<script>
+  
 </script>
 </body>
 
